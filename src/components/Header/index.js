@@ -29,6 +29,18 @@ class Header extends React.Component {
     };
   }
 
+  static getDerivedStateFromProps = (nextProps, prevState) => {
+    const { pathname } = nextProps.location;
+
+    if (isNavRoute(pathname)) {
+      return null;
+    }
+    return {
+      ...prevState,
+      activeNavRoute: false
+    };
+  };
+
   handleRouteChange = (e, value) => {
     if (isNavRoute(value)) this.setState({ activeNavRoute: value });
     else this.setState({ activeNavRoute: false });
@@ -46,7 +58,7 @@ class Header extends React.Component {
     const { activeNavRoute, anchorEl } = this.state;
 
     return (
-      <AppBar style={{ flexDirection: 'row' }}>
+      <AppBar style={{ flexDirection: 'row', margin: 0 }} position="sticky">
         <Tabs onChange={this.handleRouteChange} value={activeNavRoute} style={{ flex: 1 }}>
           {navRoutes.map(({ label, value, exact }) => (
             <NavLink label={label} key={value} value={value} exact={exact} />
