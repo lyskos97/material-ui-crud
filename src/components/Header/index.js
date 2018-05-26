@@ -21,10 +21,9 @@ const isNavRoute = pathString => navRoutes.some(({ value }) => pathString === va
 class Header extends React.Component {
   constructor(props) {
     super(props);
-    const { pathname } = props.location;
 
     this.state = {
-      activeNavRoute: isNavRoute(pathname) ? pathname : false,
+      activeNavRoute: false,
       anchorEl: null
     };
   }
@@ -33,17 +32,15 @@ class Header extends React.Component {
     const { pathname } = nextProps.location;
 
     if (isNavRoute(pathname)) {
-      return null;
+      return {
+        ...prevState,
+        activeNavRoute: pathname
+      };
     }
     return {
       ...prevState,
       activeNavRoute: false
     };
-  };
-
-  handleRouteChange = (e, value) => {
-    if (isNavRoute(value)) this.setState({ activeNavRoute: value });
-    else this.setState({ activeNavRoute: false });
   };
 
   handleMenuOpen = e => {
@@ -59,7 +56,7 @@ class Header extends React.Component {
 
     return (
       <AppBar style={{ flexDirection: 'row', margin: 0 }} position="sticky">
-        <Tabs onChange={this.handleRouteChange} value={activeNavRoute} style={{ flex: 1 }}>
+        <Tabs value={activeNavRoute} style={{ flex: 1 }}>
           {navRoutes.map(({ label, value, exact }) => (
             <NavLink label={label} key={value} value={value} exact={exact} />
           ))}
