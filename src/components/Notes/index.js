@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { Paper, Typography } from '@material-ui/core';
+
+import Note from './Note';
 
 class Notes extends React.Component {
   render() {
     return (
-      <Paper>
-        <Typography>Text</Typography>
-      </Paper>
+      <React.Fragment>
+        <Note />
+        <Note />
+      </React.Fragment>
     );
   }
 }
