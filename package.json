@@ -1,7 +1,7 @@
 {
   "name": "mui-app",
-  "version": "1.0.0",
-  "description": "Custom build",
+  "version": "0.1.0",
+  "description": "Material-UI based CRUD React App",
   "main": "src/index.js",
   "author": "lyskos97@gmail.com",
   "license": "MIT",

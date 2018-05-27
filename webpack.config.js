@@ -35,7 +35,7 @@ module.exports = {
         ]
       },
       {
-        test: /\.(svg|eot|png|woff2|ttf|woff)$/,
+        test: /\.(svg|eot|png|woff2|ttf|woff|ico)$/,
         loader: 'file-loader'
       }
     ]
@@ -44,7 +44,8 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html',
       filename: './index.html',
-      inject: 'body'
+      inject: 'body',
+      favicon: './public/favicon.ico'
     })
   ]
 };

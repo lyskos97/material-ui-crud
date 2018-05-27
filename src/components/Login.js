@@ -100,24 +100,11 @@ class Login extends React.Component {
             >
               Login
             </Button>
-            <Button
-              onClick={async () => {
-                try {
-                  console.log('before /user', axios.defaults.headers.common);
-                  const res = await axios.get('/user');
-                  console.log('/user', res);
-                } catch (e) {
-                  console.log('/user', e);
-                }
-              }}
-            >
-              Get user
-            </Button>
             <Typography
               style={{ textAlign: 'center', margin: 10, cursor: 'default' }}
               variant="caption"
             >
-              Don't have and account yet?
+              Don't have an account yet?
             </Typography>
             <Button
               style={styles.button}
