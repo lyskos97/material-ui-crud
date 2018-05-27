@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Switch, Route, withRouter } from 'react-router-dom';
-import { Paper, CssBaseline } from '@material-ui/core';
+import { Paper, CssBaseline, CircularProgress, Grid, Typography } from '@material-ui/core';
 import axios from 'axios';
 
 import Header from './Header';
@@ -12,6 +12,12 @@ import Register from './Register';
 const style = {
   root: {
     padding: 20
+  },
+  loadRoot: {
+    height: '100vh',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 };
 
@@ -24,18 +30,21 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      user: null
+      user: null,
+      loading: true
     };
   }
 
   async componentDidMount() {
     await this.saveUserFromToken();
+    this.setState({ loading: false });
   }
 
   saveUserFromToken = async () => {
+    axios.defaults.headers.common.Authorization = `Bearer ${localStorage.getItem('notesApiToken')}`;
     try {
       const { data } = await axios.get('/user');
-      console.log('/user data', data);
+
       this.setState({ user: data });
     } catch (e) {
       console.log('/login e', e);
@@ -43,28 +52,44 @@ class App extends React.Component {
     }
   };
 
+  deleteUser = () => {
+    this.setState({ user: null });
+  };
+
   render() {
-    const { user } = this.state;
-    console.log('user', user);
+    const { user, loading } = this.state;
+
+    if (loading)
+      return (
+        <Grid container style={style.loadRoot}>
+          <CssBaseline />
+          <CircularProgress size={60} />
+          <Typography variant="title">Just a moment...</Typography>
+        </Grid>
+      );
 
     return (
       <React.Fragment>
         <CssBaseline />
-        <Header user={user} />
+        <Header user={user} deleteUser={this.deleteUser} />
         <Paper style={style.root} component="main">
           <Switch>
-            <Route exact path="/" component={Notes} />
+            <Route
+              exact
+              path="/"
+              render={() => {
+                return <Notes user={user} />;
+              }}
+            />
             <Route
               path="/login"
               render={() => {
-                console.log('rendering log...');
                 return <Login loggedIn={!!user} saveUserFromToken={this.saveUserFromToken} />;
               }}
             />
             <Route
               path="/register"
               render={() => {
-                console.log('rendering reg...');
                 return <Register loggedIn={!!user} saveUserFromToken={this.saveUserFromToken} />;
               }}
             />
