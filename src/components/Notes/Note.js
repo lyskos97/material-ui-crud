@@ -11,6 +11,7 @@ import {
   Input,
   Divider
 } from '@material-ui/core';
+import axios from 'axios';
 
 const styles = {
   root: { marginTop: 5, marginBottom: 5 },
@@ -37,9 +38,22 @@ class Note extends React.Component {
     this.setState({ note: this.props.note, edit: false });
   };
 
-  handleSave = () => {
-    // TODO:
-    this.setState({ edit: false });
+  handleSave = async () => {
+    const { note } = this.state;
+    const { title, text } = note;
+
+    console.log('saving...');
+
+    await axios.put(`/notes/${note._id}`, { title, text });
+    await this.props.refetchNotes();
+  };
+
+  handleDelete = async () => {
+    const { note } = this.state;
+    console.log('deleting...');
+    await axios.delete(`notes/${note._id}`);
+    console.log('deleted!');
+    this.props.refetchNotes();
   };
 
   handleChange = e => {
@@ -51,7 +65,10 @@ class Note extends React.Component {
 
   render() {
     const { edit, note } = this.state;
-    const { title, text, updatedAt } = note;
+    const { _id, title, text, updatedAt } = note;
+
+    const htmlTitleId = `note-title-${_id}`;
+    const htmlTextId = `note-text-${_id}`;
 
     return (
       <Card style={styles.root}>
@@ -59,10 +76,11 @@ class Note extends React.Component {
           title={
             edit ? (
               <FormControl fullWidth>
-                <InputLabel htmlFor="note-title">Title</InputLabel>
+                <InputLabel htmlFor={htmlTitleId}>Title</InputLabel>
                 <Input
                   fullWidth
-                  id="note-title"
+                  autoFocus
+                  id={htmlTitleId}
                   name="title"
                   value={title}
                   onChange={this.handleChange}
@@ -103,7 +121,7 @@ class Note extends React.Component {
                   <Icon>edit_icon</Icon>
                 </Button>
                 <Button
-                  onClick={this.props.deleteNote}
+                  onClick={this.handleDelete}
                   style={styles.button}
                   color="secondary"
                   variant="fab"
@@ -117,11 +135,11 @@ class Note extends React.Component {
         <CardContent style={styles.content}>
           {edit ? (
             <FormControl fullWidth>
-              <InputLabel htmlFor="note-text">Text</InputLabel>
+              <InputLabel htmlFor={htmlTextId}>Text</InputLabel>
               <Input
                 value={text}
                 name="text"
-                id="note-text"
+                id={htmlTextId}
                 onChange={this.handleChange}
                 endAdornment={<Icon>edit_icon</Icon>}
                 fullWidth
