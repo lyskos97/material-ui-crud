@@ -53,6 +53,7 @@ class Header extends React.Component {
 
   render() {
     const { activeNavRoute, anchorEl } = this.state;
+    const { user } = this.props;
 
     return (
       <AppBar style={{ flexDirection: 'row', margin: 0 }} position="sticky">
@@ -61,19 +62,35 @@ class Header extends React.Component {
             <NavLink label={label} key={value} value={value} exact={exact} />
           ))}
         </Tabs>
-        <Button
-          onClick={this.handleMenuOpen}
-          color="inherit"
-          style={{ marginRight: 20, textTransform: 'none' }}
-        >
-          lyskos97
-        </Button>
-        <Menu id="simple-menu" anchorEl={anchorEl} open={!!anchorEl} onClose={this.handleMenuClose}>
-          <MenuItem component={Link} to="/profile" onClick={this.handleMenuClose}>
-            My profile
-          </MenuItem>
-          <MenuItem onClick={this.handleMenuClose}>Logout</MenuItem>
-        </Menu>
+        <div style={{ marginRight: 20, display: 'flex' }}>
+          {user ? (
+            <React.Fragment>
+              <Button onClick={this.handleMenuOpen} color="inherit">
+                lyskos97
+              </Button>
+              <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                open={!!anchorEl}
+                onClose={this.handleMenuClose}
+              >
+                <MenuItem component={Link} to="/profile" onClick={this.handleMenuClose}>
+                  My profile
+                </MenuItem>
+                <MenuItem onClick={this.handleMenuClose}>Logout</MenuItem>
+              </Menu>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <Button color="inherit" component={Link} to="/login">
+                Login
+              </Button>
+              <Button color="inherit" component={Link} to="/register">
+                Register
+              </Button>
+            </React.Fragment>
+          )}
+        </div>
       </AppBar>
     );
   }
