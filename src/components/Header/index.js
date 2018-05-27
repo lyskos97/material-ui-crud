@@ -43,11 +43,17 @@ class Header extends React.Component {
     };
   };
 
+  handleLogout = () => {
+    localStorage.removeItem('notesApiToken');
+    this.props.deleteUser();
+    this.handleMenuClose();
+  };
+
   handleMenuOpen = e => {
     this.setState({ anchorEl: e.currentTarget });
   };
 
-  handleMenuClose = e => {
+  handleMenuClose = () => {
     this.setState({ anchorEl: null });
   };
 
@@ -56,7 +62,7 @@ class Header extends React.Component {
     const { user } = this.props;
 
     return (
-      <AppBar style={{ flexDirection: 'row', margin: 0 }} position="sticky">
+      <AppBar style={{ flexDirection: 'row', margin: 0 }} position="static">
         <Tabs value={activeNavRoute} style={{ flex: 1 }}>
           {navRoutes.map(({ label, value, exact }) => (
             <NavLink label={label} key={value} value={value} exact={exact} />
@@ -66,7 +72,7 @@ class Header extends React.Component {
           {user ? (
             <React.Fragment>
               <Button onClick={this.handleMenuOpen} color="inherit">
-                lyskos97
+                {user.username}
               </Button>
               <Menu
                 id="simple-menu"
@@ -77,7 +83,7 @@ class Header extends React.Component {
                 <MenuItem component={Link} to="/profile" onClick={this.handleMenuClose}>
                   My profile
                 </MenuItem>
-                <MenuItem onClick={this.handleMenuClose}>Logout</MenuItem>
+                <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
               </Menu>
             </React.Fragment>
           ) : (
